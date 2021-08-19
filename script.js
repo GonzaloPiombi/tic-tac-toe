@@ -63,10 +63,12 @@ const game = (() => {
                 if (playerMove === 'x') {
                     rows[i] += 1;
                     if (rows[i] === 3) return alert('Player 1 wins');
+                    break;
                 }
                 else {
                     rows[i] -= 1;
                     if (rows[i] === -3) return alert('Player 2 Wins');
+                    break;
                 }
             }
         }
@@ -76,10 +78,12 @@ const game = (() => {
                 if (playerMove === 'x') {
                     columns[grid[i].indexOf(squareIndex)] += 1;
                     if (columns[grid[i].indexOf(squareIndex)] === 3) return alert('Player 1 wins');
+                    break;
                 }
                 else {
                     columns[grid[i].indexOf(squareIndex)] -= 1;
                     if (columns[grid[i].indexOf(squareIndex)] === -3) return alert('Player 2 wins');
+                    break;
                 }
             }
         }

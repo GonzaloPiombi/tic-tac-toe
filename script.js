@@ -96,6 +96,7 @@ const game = (() => {
         }
 
         _checkDiagonals();
+        _checkTie();
     }
 
     const _checkDiagonals = () => {
@@ -117,6 +118,16 @@ const game = (() => {
             alert('Player 1 wins');
         } else if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'o')) {
             alert('Player 2 wins');
+        }
+    }
+
+    const _checkTie = () => {
+        let counter = 0;
+        for (let i = 0; i < document.querySelectorAll('.square').length; i++) {
+            if (document.querySelectorAll('.square')[i].textContent !== '') {
+                counter++;
+                if (counter === 9) return alert('Tie!');
+            }
         }
     }
 

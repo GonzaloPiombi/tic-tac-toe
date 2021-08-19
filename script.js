@@ -62,11 +62,11 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     rows[i] += 1;
-                    console.log(rows);
+                    if (rows[i] === 3) return alert('Player 1 wins');
                 }
                 else {
                     rows[i] -= 1;
-                    console.log(rows);
+                    if (rows[i] === -3) return alert('Player 2 Wins');
                 }
             }
         }
@@ -75,17 +75,17 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     columns[grid[i].indexOf(squareIndex)] += 1;
-                    console.log(columns);
+                    if (columns[grid[i].indexOf(squareIndex)] === 3) return alert('Player 1 wins');
                 }
                 else {
                     columns[grid[i].indexOf(squareIndex)] -= 1;
-                    console.log(columns);
+                    if (columns[grid[i].indexOf(squareIndex)] === -3) return alert('Player 2 wins');
                 }
             }
         }
     }
 
-    return { addClickEvent, _checkWinner };
+    return { addClickEvent };
 })();
 
 const player1 = player('Player 1', 'x');

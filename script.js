@@ -140,6 +140,7 @@ const game = (() => {
     }
 
     const _checkTie = () => {
+        if (gameOver) return;
         let counter = 0;
         for (let i = 0; i < document.querySelectorAll('.square').length; i++) {
             if (document.querySelectorAll('.square')[i].textContent !== '') {

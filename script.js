@@ -18,7 +18,8 @@ const gameBoard = (() => {
 const game = (() => {
     let moves = [];
     let playerMove;
-    //'rows' and 'columns' arrays have 3 values, each one representing one row (from top to bottom) and one column (from left to right).
+    let gameOver = false;
+    //'rows' and 'columns' arrays have 3 values each, each one representing one row (from top to bottom) and one column (from left to right).
     const rows = [0, 0, 0];
     const columns = [0, 0, 0];
 
@@ -44,7 +45,7 @@ const game = (() => {
 
     const _makeMark = square => {
         _checkPlayerTurn();
-        if (square.textContent !== '') {
+        if (square.textContent !== '' || gameOver) {
             return;
         } else {
             square.textContent = playerMove;
@@ -53,6 +54,7 @@ const game = (() => {
     }
 
     const _checkWinner = squareIndex => {
+        if (gameOver) return;
         squareIndex = Number(squareIndex);
         const grid = [
             [0, 1, 2],
@@ -68,12 +70,18 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     rows[i] += 1;
-                    if (rows[i] === 3) return alert('Player 1 wins');
+                    if (rows[i] === 3) {
+                        alert('Player 1 wins');
+                        gameOver = true;
+                    }
                     break;
                 }
                 else {
                     rows[i] -= 1;
-                    if (rows[i] === -3) return alert('Player 2 Wins');
+                    if (rows[i] === -3) {
+                        alert('Player 2 wins');
+                        gameOver = true;
+                    }
                     break;
                 }
             }
@@ -84,12 +92,18 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     columns[grid[i].indexOf(squareIndex)] += 1;
-                    if (columns[grid[i].indexOf(squareIndex)] === 3) return alert('Player 1 wins');
+                    if (columns[grid[i].indexOf(squareIndex)] === 3) {
+                        alert('Player 1 wins');
+                        gameOver = true;
+                    }
                     break;
                 }
                 else {
                     columns[grid[i].indexOf(squareIndex)] -= 1;
-                    if (columns[grid[i].indexOf(squareIndex)] === -3) return alert('Player 2 wins');
+                    if (columns[grid[i].indexOf(squareIndex)] === -3) {
+                        alert('Player 2 wins');
+                        gameOver = true;
+                    }
                     break;
                 }
             }
@@ -110,14 +124,18 @@ const game = (() => {
 
         if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'x')) {
             alert('Player 1 wins');
+            gameOver = true;
         } else if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'o')) {
             alert('Player 2 wins');
+            gameOver = true;
         }
 
         if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'x')) {
             alert('Player 1 wins');
+            gameOver = true;
         } else if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'o')) {
             alert('Player 2 wins');
+            gameOver = true;
         }
     }
 
@@ -126,9 +144,9 @@ const game = (() => {
         for (let i = 0; i < document.querySelectorAll('.square').length; i++) {
             if (document.querySelectorAll('.square')[i].textContent !== '') {
                 counter++;
-                if (counter === 9) return alert('Tie!');
             }
         }
+        if (counter === 9) return alert('Tie!');
     }
 
     return { addClickEvent };

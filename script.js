@@ -83,6 +83,28 @@ const game = (() => {
                 }
             }
         }
+
+        _checkDiagonals();
+    }
+
+    const _checkDiagonals = () => {
+        const d1 = document.querySelectorAll('.square')[0];
+        const d2 = document.querySelectorAll('.square')[4];
+        const d3 = document.querySelectorAll('.square')[8];
+        const d4 = document.querySelectorAll('.square')[2];
+        const d5 = document.querySelectorAll('.square')[6];
+
+        if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'x')) {
+            alert('Player 1 wins');
+        } else if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'o')) {
+            alert('Player 2 wins');
+        }
+
+        if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'x')) {
+            alert('Player 1 wins');
+        } else if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'o')) {
+            alert('Player 2 wins');
+        }
     }
 
     return { addClickEvent };

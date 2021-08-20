@@ -17,6 +17,7 @@ const gameBoard = (() => {
 
 const game = (() => {
     let moves = [];
+    let squaresPlayed = [];
     let playerMove;
     let gameOver = false;
     //'rows' and 'columns' arrays have 3 values each, each one representing one row (from top to bottom) and one column (from left to right).
@@ -28,19 +29,13 @@ const game = (() => {
 
     const addClickEvent = () => {
         document.querySelectorAll('.square').forEach(div => {
-            div.addEventListener('click', (e) => {
-                clicked(e);
+            div.addEventListener('click', e => {
+                console.log(e);
+                squareClicked = e.currentTarget;
+                _makeMark(squareClicked);
+                _checkWinner(e.currentTarget.dataset.index);
             })
         });
-    }
-  
-    function clicked(e) {
-        console.log(e);
-        squareClicked = e.currentTarget;
-        //Remove event listener because clicking an already occupied square would affect the rows and columns arrays values.
-        squareClicked.removeEventListener(e.type, clicked); 
-        _makeMark(squareClicked);
-        _checkWinner(e.currentTarget.dataset.index);
     }
 
     const _checkPlayerTurn = () => {
@@ -62,6 +57,8 @@ const game = (() => {
     }
 
     const _checkWinner = squareIndex => {
+        if (squaresPlayed.includes(squareIndex)) return;
+        squaresPlayed.push(squareIndex);
         if (gameOver) return;
         squareIndex = Number(squareIndex);
         const grid = [
@@ -166,19 +163,15 @@ const game = (() => {
         document.querySelector('.grid-container').appendChild(restartButton);
         restartButton.addEventListener('click', () => {
             moves = [];
+            squaresPlayed = [];
             rows = [0, 0, 0];
             columns = [0, 0, 0];
-            // document.querySelectorAll('.square').forEach(div => div.textContent = '');
-            document.querySelectorAll('.square').forEach(div => {
-                div.textContent = '';
-                div.removeEventListener('click', clicked)
-            });
+            document.querySelectorAll('.square').forEach(div => div.textContent = '');
             gameOver = false;
-            // addClickEvent();
         })
     }
 
-    return { addClickEvent, _gameOver };
+    return { addClickEvent };
 })();
 
 const player1 = player('Player 1', 'x');

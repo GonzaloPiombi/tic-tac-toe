@@ -20,21 +20,29 @@ const game = (() => {
     let playerMove;
     let gameOver = false;
     //'rows' and 'columns' arrays have 3 values each, each one representing one row (from top to bottom) and one column (from left to right).
-    const rows = [0, 0, 0];
-    const columns = [0, 0, 0];
+    let rows = [0, 0, 0];
+    let columns = [0, 0, 0];
+
+    const restartButton = document.createElement('button');
+    restartButton.textContent = 'Restart game';
 
     const addClickEvent = () => {
         document.querySelectorAll('.square').forEach(div => {
-            div.addEventListener('click', function clicked(e) {
-                squareClicked = e.currentTarget;
-                //Remove event listener because clicking an already occupied square would affect the rows and columns arrays values.
-                squareClicked.removeEventListener(e.type, clicked); 
-                _makeMark(squareClicked);
-                _checkWinner(e.currentTarget.dataset.index);
-            });
+            div.addEventListener('click', (e) => {
+                clicked(e);
+            })
         });
     }
   
+    function clicked(e) {
+        console.log(e);
+        squareClicked = e.currentTarget;
+        //Remove event listener because clicking an already occupied square would affect the rows and columns arrays values.
+        squareClicked.removeEventListener(e.type, clicked); 
+        _makeMark(squareClicked);
+        _checkWinner(e.currentTarget.dataset.index);
+    }
+
     const _checkPlayerTurn = () => {
         if (moves.length === 0 || moves[moves.length - 1] === 'o') {
             return playerMove = player1.mark;
@@ -72,7 +80,7 @@ const game = (() => {
                     rows[i] += 1;
                     if (rows[i] === 3) {
                         alert('Player 1 wins');
-                        gameOver = true;
+                        _gameOver();
                     }
                     break;
                 }
@@ -80,7 +88,7 @@ const game = (() => {
                     rows[i] -= 1;
                     if (rows[i] === -3) {
                         alert('Player 2 wins');
-                        gameOver = true;
+                        _gameOver();
                     }
                     break;
                 }
@@ -94,7 +102,7 @@ const game = (() => {
                     columns[grid[i].indexOf(squareIndex)] += 1;
                     if (columns[grid[i].indexOf(squareIndex)] === 3) {
                         alert('Player 1 wins');
-                        gameOver = true;
+                        _gameOver();
                     }
                     break;
                 }
@@ -102,7 +110,7 @@ const game = (() => {
                     columns[grid[i].indexOf(squareIndex)] -= 1;
                     if (columns[grid[i].indexOf(squareIndex)] === -3) {
                         alert('Player 2 wins');
-                        gameOver = true;
+                        _gameOver();
                     }
                     break;
                 }
@@ -124,18 +132,18 @@ const game = (() => {
 
         if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'x')) {
             alert('Player 1 wins');
-            gameOver = true;
+            _gameOver();
         } else if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'o')) {
             alert('Player 2 wins');
-            gameOver = true;
+            _gameOver();
         }
 
         if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'x')) {
             alert('Player 1 wins');
-            gameOver = true;
+            _gameOver();
         } else if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'o')) {
             alert('Player 2 wins');
-            gameOver = true;
+            _gameOver();
         }
     }
 
@@ -147,10 +155,30 @@ const game = (() => {
                 counter++;
             }
         }
-        if (counter === 9) return alert('Tie!');
+        if (counter === 9) {
+            alert('Tie!');
+            _gameOver();
+        }
     }
 
-    return { addClickEvent };
+    const _gameOver = () => {
+        gameOver = true;
+        document.querySelector('.grid-container').appendChild(restartButton);
+        restartButton.addEventListener('click', () => {
+            moves = [];
+            rows = [0, 0, 0];
+            columns = [0, 0, 0];
+            // document.querySelectorAll('.square').forEach(div => div.textContent = '');
+            document.querySelectorAll('.square').forEach(div => {
+                div.textContent = '';
+                div.removeEventListener('click', clicked)
+            });
+            gameOver = false;
+            // addClickEvent();
+        })
+    }
+
+    return { addClickEvent, _gameOver };
 })();
 
 const player1 = player('Player 1', 'x');

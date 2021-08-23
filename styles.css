@@ -1,9 +1,30 @@
 body {
-    font-size: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+header {
+    text-align: center;
+}
+
+.game-mode {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.pvp-mode {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .grid-container {
-    display: grid;
+    display: none;
+    font-size: 10rem;
     grid-template-columns: repeat(3, 200px);
 }
 

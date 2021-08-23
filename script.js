@@ -2,13 +2,28 @@ const player = (name, mark) => {
     return { name, mark };
 }
 
-const gameBoard = (() => {
+const displayController = (() => {
+    const pvpButton = document.querySelectorAll('button')[0];
+    const pvAIButton = document.querySelectorAll('button')[1];
+    const startButton = document.querySelectorAll('button')[2];
+
+    pvpButton.addEventListener('click', () => {
+        document.querySelector('.game-mode').style = 'display: none';
+        document.querySelector('.pvp-mode').style = 'display: flex';
+    });
+
+    startButton.addEventListener('click', () => {
+        player1.name = document.querySelectorAll('input')[0].value;
+        player2.name = document.querySelectorAll('input')[1].value;
+        document.querySelector('.pvp-mode').style = 'display: none';
+        document.querySelector('.grid-container').style = 'display: grid';
+    });
+
     document.querySelectorAll('.square').forEach(div => {
         div.addEventListener('click', e => {
-            console.log(e);
             squareClicked = e.currentTarget;
-            game._makeMark(squareClicked);
-            game._checkWinner(e.currentTarget.dataset.index);
+            game.makeMark(squareClicked);
+            game.checkWinner(e.currentTarget.dataset.index);
         })
     });
 })();
@@ -39,7 +54,7 @@ const game = (() => {
         }
     }
 
-    const _makeMark = square => {
+    const makeMark = square => {
         _checkPlayerTurn();
         if (square.textContent !== '' || gameOver) {
             return;
@@ -49,7 +64,7 @@ const game = (() => {
         }
     }
 
-    const _checkWinner = squareIndex => {
+    const checkWinner = squareIndex => {
         if (squaresPlayed.includes(squareIndex)) return;
         squaresPlayed.push(squareIndex);
         if (gameOver) return;
@@ -132,16 +147,6 @@ const game = (() => {
             alert('Tie!');
             _gameOver();
         }
-        // let counter = 0;
-        // for (let i = 0; i < document.querySelectorAll('.square').length; i++) {
-        //     if (document.querySelectorAll('.square')[i].textContent !== '') {
-        //         counter++;
-        //     }
-        // }
-        // if (counter === 9) {
-        //     alert('Tie!');
-        //     _gameOver();
-        // }
     }
 
     const _gameOver = () => {
@@ -157,7 +162,7 @@ const game = (() => {
         })
     }
 
-    return { _makeMark, _checkWinner };
+    return { makeMark, checkWinner };
 })();
 
 const player1 = player('Player 1', 'x');

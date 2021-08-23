@@ -133,13 +133,13 @@ const game = (() => {
     const _gameOver = (player) => {
         gameOver = true;
         const winner = document.createElement('h2');
-        document.querySelector('header').appendChild(winner);
+        document.querySelector('.message').appendChild(winner);
         if (player) {
             winner.textContent = `${player} wins!`;
         } else {
             winner.textContent = 'It\'s a tie!';
         }
-        document.querySelector('.grid-container').appendChild(restartButton);
+        document.querySelector('.restart').appendChild(restartButton);
         restartButton.addEventListener('click', () => {
             moves = [];
             squaresPlayed = [];

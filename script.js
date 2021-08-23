@@ -82,18 +82,12 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     rows[i] += 1;
-                    if (rows[i] === 3) {
-                        alert('Player 1 wins');
-                        _gameOver();
-                    }
+                    if (rows[i] === 3) _gameOver(player1.name);
                     break;
                 }
                 else {
                     rows[i] -= 1;
-                    if (rows[i] === -3) {
-                        alert('Player 2 wins');
-                        _gameOver();
-                    }
+                    if (rows[i] === -3) _gameOver(player2.name);
                     break;
                 }
             }
@@ -103,18 +97,12 @@ const game = (() => {
             if (grid[i].indexOf(squareIndex) !== -1) {
                 if (playerMove === 'x') {
                     columns[grid[i].indexOf(squareIndex)] += 1;
-                    if (columns[grid[i].indexOf(squareIndex)] === 3) {
-                        alert('Player 1 wins');
-                        _gameOver();
-                    }
+                    if (columns[grid[i].indexOf(squareIndex)] === 3) _gameOver(player1.name);
                     break;
                 }
                 else {
                     columns[grid[i].indexOf(squareIndex)] -= 1;
-                    if (columns[grid[i].indexOf(squareIndex)] === -3) {
-                        alert('Player 2 wins');
-                        _gameOver();
-                    }
+                    if (columns[grid[i].indexOf(squareIndex)] === -3) _gameOver(player2.name);
                     break;
                 }
             }
@@ -125,32 +113,32 @@ const game = (() => {
 
     const _checkDiagonals = () => {
         if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'x')) {
-            alert('Player 1 wins');
-            _gameOver();
+            _gameOver(player1.name);
         } else if ((d1.textContent === d2.textContent && d1.textContent === d3.textContent) && (d1.textContent === 'o')) {
-            alert('Player 2 wins');
-            _gameOver();
+            _gameOver(player2.name);
         }
         
         if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'x')) {
-            alert('Player 1 wins');
-            _gameOver();
+            _gameOver(player1.name);
         } else if ((d4.textContent === d2.textContent && d4.textContent === d5.textContent) && (d4.textContent === 'o')) {
-            alert('Player 2 wins');
-            _gameOver();
+            _gameOver(player2.name);
         }
     }
 
     const _checkTie = () => {
         if (gameOver) return;
-        if (moves.length === 9) {
-            alert('Tie!');
-            _gameOver();
-        }
+        if (moves.length === 9) _gameOver();
     }
 
-    const _gameOver = () => {
+    const _gameOver = (player) => {
         gameOver = true;
+        const winner = document.createElement('h2');
+        document.querySelector('header').appendChild(winner);
+        if (player) {
+            winner.textContent = `${player} wins!`;
+        } else {
+            winner.textContent = 'It\'s a tie!';
+        }
         document.querySelector('.grid-container').appendChild(restartButton);
         restartButton.addEventListener('click', () => {
             moves = [];
@@ -159,6 +147,7 @@ const game = (() => {
             columns = [0, 0, 0];
             document.querySelectorAll('.square').forEach(div => div.textContent = '');
             gameOver = false;
+            winner.remove();
         })
     }
 

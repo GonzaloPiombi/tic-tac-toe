@@ -44,7 +44,7 @@ const game = (() => {
     const d5 = document.querySelectorAll('.square')[6];
 
     const restartButton = document.createElement('button');
-    restartButton.textContent = 'Restart game';
+    restartButton.textContent = 'Play again!';
 
     const _checkPlayerTurn = () => {
         if (moves.length === 0 || moves[moves.length - 1] === 'o') {
@@ -148,6 +148,7 @@ const game = (() => {
             document.querySelectorAll('.square').forEach(div => div.textContent = '');
             gameOver = false;
             winner.remove();
+            restartButton.remove();
         })
     }
 

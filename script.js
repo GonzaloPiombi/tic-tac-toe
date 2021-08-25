@@ -14,8 +14,8 @@ const displayController = (() => {
         document.querySelectorAll('.square').forEach(div => {
             div.addEventListener('click', e => {
                 squareClicked = e.currentTarget;
-                game.makeMarkPvp(squareClicked);
-                game.checkWinner(e.currentTarget.dataset.index);
+                squareIndex = e.currentTarget.dataset.index;
+                game.makeMarkPvp(squareClicked, squareIndex);
             })
         });
     });
@@ -79,13 +79,14 @@ const game = (() => {
         }
     }
 
-    const makeMarkPvp = square => {
+    const makeMarkPvp = (square, squareIndex) => {
         _checkPlayerTurn();
         if (square.textContent !== '' || gameOver) {
             return;
         } else {
             square.textContent = playerMove;
             moves.push(playerMove);
+            _checkWinner(squareIndex)
         }
     }
     //-----------------------------------------PVAI SECTION-----------------------------------------//
@@ -99,7 +100,7 @@ const game = (() => {
             moves.push(playerMove);
             let index = remainingSquares.indexOf(Number(squareIndex));
             remainingSquares.splice(index, 1);
-            checkWinner(squareIndex);
+            _checkWinner(squareIndex);
             aiMove();
         }
     }
@@ -114,12 +115,12 @@ const game = (() => {
             aiSquare.textContent = playerMove;
             moves.push(playerMove);
             remainingSquares.splice(index, 1);
-            checkWinner(remainingSquareIndex);
+            _checkWinner(remainingSquareIndex);
         }, 800);
     }
 
     //----------------------------------------------------------------------------------------------//
-    const checkWinner = squareIndex => {
+    const _checkWinner = squareIndex => {
         if (squaresPlayed.includes(squareIndex)) return;
         squaresPlayed.push(squareIndex);
         if (gameOver) return;
@@ -208,7 +209,7 @@ const game = (() => {
         })
     }
 
-    return { makeMarkPvp, checkWinner, makeMarkPvai };
+    return { makeMarkPvp, makeMarkPvai };
 })();
 
 const player1 = player('Player 1', 'x');

@@ -5,27 +5,46 @@ const player = (name, mark) => {
 const displayController = (() => {
     const pvpButton = document.querySelectorAll('button')[0];
     const pvAIButton = document.querySelectorAll('button')[1];
-    const startButton = document.querySelectorAll('button')[2];
+    const startButton1 = document.querySelectorAll('button')[2];
+    const startButton2 = document.querySelectorAll('button')[3];
 
     pvpButton.addEventListener('click', () => {
         document.querySelector('.game-mode').style = 'display: none';
         document.querySelector('.pvp-mode').style = 'display: flex';
+        document.querySelectorAll('.square').forEach(div => {
+            div.addEventListener('click', e => {
+                squareClicked = e.currentTarget;
+                game.makeMarkPvp(squareClicked);
+                game.checkWinner(e.currentTarget.dataset.index);
+            })
+        });
     });
 
-    startButton.addEventListener('click', () => {
+    pvAIButton.addEventListener('click', () => {
+        document.querySelector('.game-mode').style = 'display: none';
+        document.querySelector('.pvai-mode').style = 'display: flex';
+        document.querySelectorAll('.square').forEach(div => {
+            div.addEventListener('click', e => {
+                squareClicked = e.currentTarget;
+                squareIndex = e.currentTarget.dataset.index;
+                game.makeMarkPvai(squareClicked, squareIndex);
+            })
+        });
+    });
+
+    startButton1.addEventListener('click', () => {
         player1.name = document.querySelectorAll('input')[0].value;
         player2.name = document.querySelectorAll('input')[1].value;
         document.querySelector('.pvp-mode').style = 'display: none';
         document.querySelector('.grid-container').style = 'display: grid';
     });
 
-    document.querySelectorAll('.square').forEach(div => {
-        div.addEventListener('click', e => {
-            squareClicked = e.currentTarget;
-            game.makeMark(squareClicked);
-            game.checkWinner(e.currentTarget.dataset.index);
-        })
+    startButton2.addEventListener('click', () => {
+        player1.name = document.querySelectorAll('input')[0].value;
+        document.querySelector('.pvai-mode').style = 'display: none';
+        document.querySelector('.grid-container').style = 'display: grid';
     });
+
 })();
 
 const game = (() => {
@@ -33,9 +52,14 @@ const game = (() => {
     let squaresPlayed = [];
     let playerMove;
     let gameOver = false;
+
     //'rows' and 'columns' arrays have 3 values each, each one representing one row (from top to bottom) and one column (from left to right).
     let rows = [0, 0, 0];
     let columns = [0, 0, 0];
+
+    //Variable used for the ai to pick an available square.
+    let remainingSquares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
     //Each variable represents a square of the diagonals. Winning combinations would be squares 0, 4, 8 or 2, 4, 6.
     const d1 = document.querySelectorAll('.square')[0];
     const d2 = document.querySelectorAll('.square')[4];
@@ -46,6 +70,7 @@ const game = (() => {
     const restartButton = document.createElement('button');
     restartButton.textContent = 'Play again!';
 
+    //-----------------------------------------PVP SECTION-----------------------------------------//
     const _checkPlayerTurn = () => {
         if (moves.length === 0 || moves[moves.length - 1] === 'o') {
             return playerMove = player1.mark;
@@ -54,7 +79,7 @@ const game = (() => {
         }
     }
 
-    const makeMark = square => {
+    const makeMarkPvp = square => {
         _checkPlayerTurn();
         if (square.textContent !== '' || gameOver) {
             return;
@@ -63,7 +88,37 @@ const game = (() => {
             moves.push(playerMove);
         }
     }
+    //-----------------------------------------PVAI SECTION-----------------------------------------//
 
+    const makeMarkPvai = (square, squareIndex) => {
+        playerMove = player1.mark;
+        if (square.textContent !== '' || gameOver) {
+            return;
+        } else {
+            square.textContent = playerMove;
+            moves.push(playerMove);
+            let index = remainingSquares.indexOf(Number(squareIndex));
+            remainingSquares.splice(index, 1);
+            checkWinner(squareIndex);
+            aiMove();
+        }
+    }
+
+    const aiMove = () => {
+        if (gameOver) return;
+        setTimeout(() => {
+            playerMove = player2.mark;
+            let index = Math.floor(Math.random() * remainingSquares.length);
+            let remainingSquareIndex = remainingSquares[index];
+            let aiSquare = document.querySelectorAll('.square')[remainingSquareIndex];
+            aiSquare.textContent = playerMove;
+            moves.push(playerMove);
+            remainingSquares.splice(index, 1);
+            checkWinner(remainingSquareIndex);
+        }, 800);
+    }
+
+    //----------------------------------------------------------------------------------------------//
     const checkWinner = squareIndex => {
         if (squaresPlayed.includes(squareIndex)) return;
         squaresPlayed.push(squareIndex);
@@ -147,12 +202,13 @@ const game = (() => {
             columns = [0, 0, 0];
             document.querySelectorAll('.square').forEach(div => div.textContent = '');
             gameOver = false;
+            remainingSquares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
             winner.remove();
             restartButton.remove();
         })
     }
 
-    return { makeMark, checkWinner };
+    return { makeMarkPvp, checkWinner, makeMarkPvai };
 })();
 
 const player1 = player('Player 1', 'x');

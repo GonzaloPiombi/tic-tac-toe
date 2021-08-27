@@ -40,7 +40,8 @@ const displayController = (() => {
     });
 
     startButton2.addEventListener('click', () => {
-        player1.name = document.querySelectorAll('input')[0].value;
+        player1.name = document.querySelectorAll('input')[2].value;
+        player2.name = 'Computer';
         document.querySelector('.pvai-mode').style = 'display: none';
         document.querySelector('.grid-container').style = 'display: grid';
     });
@@ -107,16 +108,14 @@ const game = (() => {
 
     const aiMove = () => {
         if (gameOver) return;
-        setTimeout(() => {
-            playerMove = player2.mark;
-            let index = Math.floor(Math.random() * remainingSquares.length);
-            let remainingSquareIndex = remainingSquares[index];
-            let aiSquare = document.querySelectorAll('.square')[remainingSquareIndex];
-            aiSquare.textContent = playerMove;
-            moves.push(playerMove);
-            remainingSquares.splice(index, 1);
-            _checkWinner(remainingSquareIndex);
-        }, 800);
+        playerMove = player2.mark;
+        let index = Math.floor(Math.random() * remainingSquares.length);
+        let remainingSquareIndex = remainingSquares[index];
+        let aiSquare = document.querySelectorAll('.square')[remainingSquareIndex];
+        aiSquare.textContent = playerMove;
+        moves.push(playerMove);
+        remainingSquares.splice(index, 1);
+        _checkWinner(remainingSquareIndex);
     }
 
     //----------------------------------------------------------------------------------------------//

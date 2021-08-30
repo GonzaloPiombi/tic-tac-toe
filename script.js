@@ -8,28 +8,32 @@ const displayController = (() => {
     const startButton1 = document.querySelectorAll('button')[2];
     const startButton2 = document.querySelectorAll('button')[3];
 
-    pvpButton.addEventListener('click', () => {
-        document.querySelector('.game-mode').style = 'display: none';
-        document.querySelector('.pvp-mode').style = 'display: flex';
+    const _addClickEvent = () => {
         document.querySelectorAll('.square').forEach(div => {
             div.addEventListener('click', e => {
                 squareClicked = e.currentTarget;
                 squareIndex = e.currentTarget.dataset.index;
-                game.makeMarkPvp(squareClicked, squareIndex);
-            })
+                if (document.querySelector('.grid-container').classList.contains('pvp')) {
+                    game.makeMarkPvp(squareClicked, squareIndex);
+                } else {
+                    game.makeMarkPvai(squareClicked, squareIndex);
+                }
+            });
         });
+    }
+
+    pvpButton.addEventListener('click', () => {
+        document.querySelector('.game-mode').style = 'display: none';
+        document.querySelector('.pvp-mode').style = 'display: flex';
+        document.querySelector('.grid-container').classList.add('pvp');
+        _addClickEvent();
     });
 
     pvAIButton.addEventListener('click', () => {
         document.querySelector('.game-mode').style = 'display: none';
         document.querySelector('.pvai-mode').style = 'display: flex';
-        document.querySelectorAll('.square').forEach(div => {
-            div.addEventListener('click', e => {
-                squareClicked = e.currentTarget;
-                squareIndex = e.currentTarget.dataset.index;
-                game.makeMarkPvai(squareClicked, squareIndex);
-            })
-        });
+        document.querySelector('.grid-container').classList.remove('pvp');
+        _addClickEvent();
     });
 
     startButton1.addEventListener('click', () => {
@@ -70,6 +74,8 @@ const game = (() => {
 
     const restartButton = document.createElement('button');
     restartButton.textContent = 'Play again!';
+    const backToMainMenu = document.createElement('button');
+    backToMainMenu.textContent = 'Back to Menu';
 
     //-----------------------------------------PVP SECTION-----------------------------------------//
     const _checkPlayerTurn = () => {
@@ -195,17 +201,30 @@ const game = (() => {
             winner.textContent = 'It\'s a tie!';
         }
         document.querySelector('.restart').appendChild(restartButton);
-        restartButton.addEventListener('click', () => {
-            moves = [];
-            squaresPlayed = [];
-            rows = [0, 0, 0];
-            columns = [0, 0, 0];
-            document.querySelectorAll('.square').forEach(div => div.textContent = '');
-            gameOver = false;
-            remainingSquares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-            winner.remove();
-            restartButton.remove();
-        })
+        document.querySelector('.restart').appendChild(backToMainMenu);
+        restartButton.addEventListener('click', () => _restart(winner));
+        backToMainMenu.addEventListener('click', () => {
+            _restart(winner);
+            _backToMainMenu();
+        });
+    }
+
+    const _restart = (winner) => {
+        moves = [];
+        squaresPlayed = [];
+        rows = [0, 0, 0];
+        columns = [0, 0, 0];
+        document.querySelectorAll('.square').forEach(div => div.textContent = '');
+        gameOver = false;
+        remainingSquares = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        winner.remove();
+        restartButton.remove();
+        backToMainMenu.remove();
+    }
+
+    const _backToMainMenu = () => {
+        document.querySelector('.grid-container').style = 'display: none';
+        document.querySelector('.game-mode').style = 'display: flex';
     }
 
     return { makeMarkPvp, makeMarkPvai };
